@@ -1,4 +1,6 @@
 const User = require('./../model/user');
+const Project = require('./../model/project');
+const Task = require('./../model/task');
 
 module.exports = {
     creatUser: function (request, response) {
@@ -33,13 +35,28 @@ module.exports = {
         })
     },
     deleteUser: function (request, response) {
-        var user = new User(request.body);
-        User.remove({ _id: user._id },
+        Task.remove({ user : request.body._id},
             function (err) {
                 if (!!err) {
                     response.json({ success: false, message: err.message });
                 } else {
-                    response.status(201).json({ success: true, data: 'User information deleted successfully..!!' });
+                    Project.remove({ manager: request.body._id },
+                        function (err) {
+                            if (!!err) {
+                                response.json({ success: false, message: err.message });
+                            } else {
+                            User.remove({ _id: request.body },
+                                function (err) {
+                                    if (!!err) {
+                                        response.json({ success: false, message: err.message });
+                                    } else {
+                                        response.status(201).json({ success: true, data: 'User information deleted successfully..!!' });
+                                    }
+                                }
+                            )
+                            }
+                        }
+                    )
                 }
             }
         )

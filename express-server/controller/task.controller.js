@@ -13,8 +13,8 @@ module.exports = {
     },
     updateTask: function (request, response) {
         var task = new Task(request.body);
-        Task.findByIdAndUpdate(request.body._id, { projectId: task.projectId, task: task.task, parent:task.parent, startDate: task.startDate, 
-            endDate: task.endDate, priorty: task.priorty, finished: task.finished, parentTask: task.parentTask, userId: task.userId, status: task.status },
+        Task.findByIdAndUpdate(request.body._id, { project: task.project, task: task.task, parent:task.parent, startDate: task.startDate, 
+            endDate: task.endDate, priorty: task.priorty, status: task.status, parentTask: task.parentTask, user: task.user },
             function (err) {
                 if (!!err) {
                     response.json({ success: false, message: err.message });
