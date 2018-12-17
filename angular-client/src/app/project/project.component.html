@@ -1,3 +1,4 @@
+<!-- Add/View Project container section begins -->
 <div class="container">
   <div class="row margin-top-10">
     <div class="col-xl-8 col-lg-10 col-md-12 offset-xl-2 offset-lg-1 mt-4">
@@ -12,13 +13,13 @@
             </div>
         </div>
         <div class="form-check row">
-            <div class="col-sm-9 offset-3 mb-3">
+            <div class="col-sm-9 mb-3 offset-sm-0 offset-lg-3">
               <input type="checkbox" class="form-check-input" [(ngModel)]="setStartEndDate" name="setStartEndDate" id="startDateEndDate"> 
               <label class="form-check-label" for="startDateEndDate">Start and End Date</label>
             </div>
         </div>
         <div class="form-group row" *ngIf="setStartEndDate">
-          <div class="col-sm-9 input-group offset-3">
+          <div class="col-sm-9 input-group offset-sm-0 offset-lg-3">
             <ngb-datepicker #dp (select)="onDateSelection($event)" [displayMonths]="2" [dayTemplate]="t" outsideDays="hidden"></ngb-datepicker>
             <ng-template #t let-date let-focused="focused">
               <span class="custom-day"
@@ -36,8 +37,7 @@
           <label class="col-sm-3 col-form-label">Priorty: </label>
           <div class="col-sm-9">
             <input type="hidden" required [(ngModel)]="priorty" onchange="method()" name="priorty">
-            <ng5-slider [(value)]="priorty" [options]="priortyOptions" (valueChange)="priortyChange()"></ng5-slider>
-            <div *ngIf="priortyValidation" class="alert alert-danger">Priorty value should be 1 - 30</div>
+            <ng5-slider [(value)]="priorty" [options]="priortyOptions"></ng5-slider>
           </div>
         </div>
         <div class="form-group row">
@@ -48,13 +48,13 @@
                 <div *ngIf="managerName.errors?.required" class="alert alert-danger">Manager is required field</div>
               </div>
             </div>
-            <div class="col-sm-2">
+            <div class="col-sm-2 mt-3 mt-sm-0 mt-lg-0 mt-md-0 mt-xs-0">
               <button type="button" name="searchManager" class="btn btn-primary" (click)="open(managerSearch)" [disabled]="managerSearchBtnDisable">Search</button>
             </div>
         </div>
         <div class="form-group row">
-          <div class="col-sm-9 offset-3">
-            <input type="button" class="btn btn-primary" name="addProject" value="{{buttonValue}}" [disabled]="projectForm.invalid || priortyEnableBtn || managerDisabledBtn" (click)="addProject(projectForm.value, projectForm)" /> &nbsp;&nbsp;
+          <div class="col-sm-9 offset-sm-0 offset-lg-3">
+            <input type="button" class="btn btn-primary" id="add-project" name="addProject" value="{{buttonValue}}" [disabled]="projectForm.invalid || managerDisabledBtn" (click)="addProject(projectForm.value, projectForm)" /> &nbsp;&nbsp;
             <input type="reset" class="btn btn-secondary" name="resetProject" value="Reset" (click)="projectForm.resetForm({}); resetForm()" />
           </div>
         </div>
@@ -65,6 +65,11 @@
         </div>
       </form>
 
+      <div class="alert alert-info" *ngIf="!projectAvailable">
+        There is no projects added yet to show here. Please add some projects to view here..!!!
+      </div>
+
+      <!-- View Project section begins -->
       <div *ngIf="projectAvailable"> 
         <div class="form-group row border-top pt-3 pt-sm-3">
           <div class="col-sm-12">
@@ -78,32 +83,32 @@
             <button type="button" class="btn btn-outline-primary" (click)="sortProject('_id')">Completed</button>
           </div>
         </div>
-        <div class="row pt-3 pt-sm-3 border-top py-sm-3" *ngFor="let project of projectInformation | filter : serachProject : 'project' | sortBy : path : sortOrder : taskData">
+        <div class="row pt-sm-3 border-top py-3" *ngFor="let project of projectInformation | filter : serachProject : 'project' | sortBy : path : sortOrder : taskData">
           <div class="col-sm-12"><h4>{{project.projectName}}</h4></div>
-          <div class="row col-sm-8">
-            <div class="col-sm-6">No of Tasks: {{project._id | findNoOfTask : taskData : 'count'}} </div>
-            <div class="col-sm-6">Completed: {{project._id | findNoOfTask : taskData : 'status'}}</div>
-            <div class="col-sm-6">Start Date: {{project.startDate | date: 'yyyy-MM-dd'}}</div>
-            <div class="col-sm-6">End Date: {{project.endDate | date: 'yyyy-MM-dd'}}</div>
-          </div>
-          <div class="col-sm-2">
-            <label class="col-sm-12">Priorty: </label>
-            <label class="col-sm-12">{{project.priorty}}</label>
-          </div>
+          <div class="col-sm-2">No of Tasks: {{project._id | findNoOfTask : taskData : 'count'}}</div>
+          <div class="col-sm-2">Completed: {{project._id | findNoOfTask : taskData : 'status'}}</div>
+          <div class="col-sm-2">Start Date: {{project.startDate | date: 'yyyy-MM-dd'}}</div>
+          <div class="col-sm-2">End Date: {{project.endDate | date: 'yyyy-MM-dd'}}</div>
+          <div class="col-sm-2">Priorty: {{project.priorty}}</div>
           <div class="col-sm-2">
             <button type="button" class="btn btn-primary btn-block" (click)="updateProject(project)">Update</button>
             <button type="button" class="btn btn-secondary btn-block" (click)="open(suspend, project)">Suspend</button>
           </div>
         </div>
       </div>
+      <!-- View Project section end -->
     </div>   
   </div>
 </div>
+<!-- Add/View Project container section begins -->
 
+<!-- Loader section begin -->
 <div class="spinner-wrapper" *ngIf="spinner">
   <app-spinner></app-spinner>
 </div>
+<!-- Loader section end -->
 
+<!-- Manager search modal begin -->
 <ng-template #managerSearch let-c="close" let-d="dismiss">
   <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title">Please select Manager</h4>
@@ -123,7 +128,7 @@
       </div>
     </div>
     <div class="form-group row">
-      <div class="col-sm-9 offset-3">
+      <div class="col-sm-9 offset-sm-0 offset-lg-3">
         <input type="button" value="Select" (click)="selectManager(); c('Save click')" class="btn btn-primary" name="selectmanager" [disabled]="!selectedManager" />
       </div>
     </div>
@@ -132,7 +137,9 @@
     <button type="button" class="btn btn-secondary" (click)="c('Cross click')">Cancel</button>
   </div>
 </ng-template>
+<!-- Manager search modal end -->
 
+<!-- Delete Project modal begin -->
 <ng-template #suspend let-c="close" let-d="dismiss">
   <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title">Delete?</h4>
@@ -148,3 +155,4 @@
     <button type="button" class="btn btn-secondary" (click)="c('Cross click')">No</button>
   </div>
 </ng-template>
+<!-- Delete Project modal end -->

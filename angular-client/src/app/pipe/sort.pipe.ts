@@ -6,7 +6,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 export class SortByPipe implements PipeTransform {
   transform(items: any[], path: string[], order: number, taskData?: any): any[] {
-    if (path && path[0] === '_id') { // This condition will execute for task completed status
+    // This condition will execute for task completed status for each project
+    if (path && path[0] === '_id') { 
       let taskStatus: any = [];
       items.filter(item => {
         taskData.filter(task => {
@@ -15,8 +16,8 @@ export class SortByPipe implements PipeTransform {
           }
         });
         path[0] = 'statusCount'; // Set path name to sort it
-        item.statusCount = taskStatus.length; // Assign the task status for each project
-        taskStatus = []; // Set empty once count assigned
+        item.statusCount = taskStatus.length; // Assign the completed task count status for each project
+        taskStatus = []; // Set empty once compelted task count is assigned for the corresponding project
       })
     }
     if (!items || !path || !order) return items;

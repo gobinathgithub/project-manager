@@ -27,16 +27,23 @@ export class ViewTaskComponent implements OnInit {
   projectInformation: any;
   projectSearchModal: any;
   projectSearchBtnDisable: boolean = false;
+  taskAvailable: boolean = false;
 
   constructor(private service: CommonService, private modalService: NgbModal, private shared: SharedService, private router: Router) { 
     this.shared.TaskModel = new TaskDetailsModel();
   }
 
+/**
+ * When component initialze required informations/methods should call
+ */
   ngOnInit() {
     this.getTask();
     this.getProject();
   }
 
+/**
+ * This method should call to get the existing task informations from DB
+ */
   getTask() {
     this.spinner = true;
     this.service.getTask().subscribe(
@@ -45,26 +52,34 @@ export class ViewTaskComponent implements OnInit {
           this.spinner = false;
           this.taskData = res.data;
           this.taskInfo = this.taskData;
-          // res.data.filter(item => {
-          //   if (!item.parentTask) {
-          //     this.taskData.push(item);
-          //   }
-          // })
-          console.log('this.parentTaskInfo: ', this.taskData);
-          // this.parentNgBootstrapTypeahead(this.parentTaskInfo)
-          console.log('Task info: ', this.taskInfo);
+          this.taskCountCheck(res.data);
         } else {
           this.spinner = false;
           this.errorMessage = 'Failed: ' + res.message;
         }
       }, (error) => {
         this.spinner = false;
-        console.log('Error..!');
         this.errorMessage = 'We are having some technical error, please try after sometime to get the existing task informations...!!!';
       }
     )
   }
 
+/**
+ * This method should to find the esiting user informations length
+ * @param data : User informations to check the length of existing users
+ */
+  taskCountCheck(data) {
+    if (data.length > 0) {
+      this.taskAvailable = true;
+    } else {
+      this.taskAvailable = false;
+    }
+  }
+
+/**
+ * This method should call when click End Task button
+ * @param task : task information to end
+ */
   endTask(task) {
     this.spinner = true;
     task.status = true;
@@ -72,16 +87,18 @@ export class ViewTaskComponent implements OnInit {
     this.service.updateTask(task).subscribe(
       (res: any) => {
         if (res.success && res.success !== false) {
-          console.log('Success');
           this.spinner = false;
         } else {
-          console.log('Failed');
           this.spinner = false;
         }
       }
     )
   }
 
+/**
+ * This method should call when click sort buttons with key value
+ * @param task : key value to sort the task
+ */
   sortTask(task: string) {
     this.path = task.split('.');
     this.sortOrder = this.sortOrder * (-1);
@@ -101,21 +118,25 @@ export class ViewTaskComponent implements OnInit {
     };
   }
 
+/**
+ * This method should call when clikc select button in modal box
+ */
   selectProject() {
-    console.log('selected Project: ', this.selectedProject);
     this.taskData = [];
     this.taskInfo.filter(item => {
       if ((this.selectedProject._id === item.project)) {
         this.taskData.push(item);
-      } else
-      if (this.selectedProject === '') {
+      } else 
+      if (!this.selectedProject._id) {
         this.taskData.push(item);
       }
     });
-    console.log('TaskList: ', this.taskData);
     this.projectSearchModal = this.selectedProject.projectName;
   }
 
+/**
+ * This method should call to get the project informations
+ */
   getProject() {
     this.spinner = true;
     this.service.getProject().subscribe(
@@ -124,7 +145,6 @@ export class ViewTaskComponent implements OnInit {
           if (res.data.length >= 1) {
             this.projectInformation = res.data;
             this.projectNgBootstrapTypeahead(this.projectInformation);
-            console.log('this.projectInformation: ', this.projectInformation);
             this.spinner = false;
           } else {
             this.projectSearchBtnDisable = true;
@@ -140,24 +160,19 @@ export class ViewTaskComponent implements OnInit {
     )
   }
 
+/**
+ * This method should call to open the modal box
+ * @param projectSearch : modal window name to open
+ */
   open(projectSearch) {
     this.modalService.open(projectSearch);
   }
 
   /**
-   * Edit a corresponding task
+   * This method call when click Edit button for corresponding task
    */
   editTask(task) {
     this.shared.TaskModel = task;
     this.router.navigateByUrl('/add-task');
   }
-
-  // taskReframe(taskInfo) {
-  //   this.taskData.filter(item => {
-  //     if (item._id === taskInfo._id) {
-  //       this.taskReframeInfo.push(item);
-  //     }
-  //   })
-  // }
-
 }

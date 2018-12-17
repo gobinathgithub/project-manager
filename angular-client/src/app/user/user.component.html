@@ -1,3 +1,4 @@
+<!-- User information section begins -->
 <div class="container">
   <div class="row margin-top-10">
     <div class="col-xl-8 col-lg-10 col-md-12 offset-xl-2 offset-lg-1 mt-4">
@@ -44,6 +45,10 @@
         </div>
       </form>
 
+      <div class="alert alert-info" *ngIf="!userAvailable">
+        There is no users added yet to show here. Please add some users to view here..!!!
+      </div>
+
       <div *ngIf="userAvailable">
         <div class="form-group row border-top pt-3 pt-sm-3">
           <div class="col-sm-6">
@@ -71,11 +76,15 @@
     </div>
   </div>
 </div>
+<!-- User information section end -->
 
+<!-- Loader section begin -->
 <div class="spinner-wrapper" *ngIf="spinner">
   <app-spinner></app-spinner>
 </div>
+<!-- Loader section end -->
 
+<!-- Delete modal begin -->
 <ng-template #content let-c="close" let-d="dismiss">
   <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title">Delete?</h4>
@@ -91,3 +100,4 @@
     <button type="button" class="btn btn-secondary" (click)="c('Cross click')">No</button>
   </div>
 </ng-template>
+<!-- Delete modal end -->

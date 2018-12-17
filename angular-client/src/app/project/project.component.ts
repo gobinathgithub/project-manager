@@ -22,7 +22,6 @@ export class ProjectComponent implements OnInit {
   private endDate: NgbDate;
   setStartEndDate: boolean = false;
   public priorty: number = 0;
-  public priortyValidation: boolean = false;
   private priortyBar: any;
   public priortyOptions: Options = {
     floor: 0,
@@ -42,7 +41,6 @@ export class ProjectComponent implements OnInit {
   editId: any;
   projectInformation: any;
   serachProject: any;
-  priortyEnableBtn: boolean = true;
   managerDisabledBtn: boolean = true;
   path: string[];
   sortOrder: number = 1 // For ASC 1, For DESC -1
@@ -51,13 +49,16 @@ export class ProjectComponent implements OnInit {
   managerSearchBtnDisable: boolean = false;
   projectAvailable: boolean = false;
 
-  constructor(private service: CommonService, private _date: DateFormatPipe, calendar: NgbCalendar, private _dateParser: NgbDateFRParserFormatter,
+  constructor(private service: CommonService, calendar: NgbCalendar, private _dateParser: NgbDateFRParserFormatter,
     private modalService: NgbModal, private shared: SharedService) {
     this.startDate = calendar.getToday();
     this.endDate = calendar.getNext(calendar.getToday(), 'd', 1);
     this.shared.TaskModel = new TaskDetailsModel();
   }
 
+/**
+ * When component initialze required informations/methods should call
+ */
   ngOnInit() {
     this.getTask();
     this.getUser();
@@ -108,27 +109,7 @@ export class ProjectComponent implements OnInit {
   }
 
   /**
-   * To check wheather Proirty value is selected or not. If not this method should trigger the validation message and
-   * change the slider background color
-   */
-  priortyValidationMethod() {
-    if (this.priorty < 1 || this.priorty > 30) {
-      this.priortyValidation = true;
-    } else {
-      this.priortyValidation = false;
-    }
-  }
-
-  /**
-   * When change Priorty value in slider this method should call to change the slider color
-   */
-  priortyChange() {
-    this.priortyEnableBtn = false;
-    this.priortyValidation = false;
-  }
-
-  /**
-   * This method should call to bring Parent Task informations when component initialize
+   * This method should call to bring Manager (User) informations when component initialize
    */
   ngBootstrapTypeahead(managerName) {
     this.search = (text$: Observable<string>) =>
@@ -140,11 +121,13 @@ export class ProjectComponent implements OnInit {
     };
   }
 
+/**
+ * This method call the existing user informations from DB
+ */
   getUser() {
     this.spinner = true;
     this.service.getUser().subscribe(
       (res: any) => {
-        console.log('res: ', res);
         if (res) {
           if (res.data.length >= 1) {
             this.userInforamtion = res.data;
@@ -167,20 +150,30 @@ export class ProjectComponent implements OnInit {
     )
   }
 
+/**
+ * This method should call when search manger and delete project actions
+ * @param managerModel : Modal name to open
+ * @param info : delete project informations
+ */
   open(managerModel, info) {
     this.modalService.open(managerModel);
     if (info) this.deleteProjectInfo = info;
   }
 
+/**
+ * This method should when select manager from modal box and assign the same to view
+ */
   selectManager() {
     this.managerDisabledBtn = false;
     this.projectDetails.manager = this.selectedManager.name;
-    console.log('this.selectedManager: ', this.selectedManager);
   }
 
+/**
+ * This method should call to add project
+ * @param project : Project information to add from form
+ * @param projectForm : Project form to reset it
+ */
   addProject(project, projectForm) {
-    console.log('Project: ', project);
-    this.priortyValidationMethod();
     project.priorty = this.priorty;
     project.manager = this.selectedManager._id;
     project.startDate = this._dateParser.format(this.startDate);
@@ -223,15 +216,16 @@ export class ProjectComponent implements OnInit {
     }
   }
 
+/**
+ * This method should call to get the existing project informations
+ */
   getProject() {
     this.spinner = true;
     this.service.getProject().subscribe(
       (res: any) => {
         if (res.success && res.success !== false) {
           this.projectInformation = res.data;
-          console.log('this.projectInformation: ', this.projectInformation);
           this.projectCountCheck(this.projectInformation);
-            // this.projectFiliter(this.projectInformation);
           this.spinner = false;
         } else {
           this.spinner = false;
@@ -244,6 +238,10 @@ export class ProjectComponent implements OnInit {
     )
   }
 
+/**
+ * This method should check the existing project informations
+ * @param data : Esiting Project informations
+ */
   projectCountCheck(data) {
     if (data.length > 0) {
       this.projectAvailable = true;
@@ -252,29 +250,29 @@ export class ProjectComponent implements OnInit {
     }
   }
 
-  // projectFiliter(info) {
-  //   info.filter(item => {
-  //     this.taskData.filter(task => {
-  //       if (item._id === task.project) {
-
-  //       }
-  //     })
-  //   });
-  // }
-
+/**
+ * This method should to reset the model values
+ */
   resetModel() {
     this.projectDetails = new ProjectDetailsModel();
   }
 
+/**
+ * This method should call when we click Suspend button to edit the project information
+ * @param project : project form informations
+ */
   updateProject(project) {
     window.scrollTo({top: 0, behavior: 'smooth'});
     this.editId = project._id;
     this.buttonValue = 'Update';
-    this.priortyEnableBtn = false;
     this.managerDisabledBtn = false;
     this.setProjectInfo(project);
   }
 
+/**
+ * This method should call when updateProject method calls to the project informations to update it in modal
+ * @param projectInfo : project form informations
+ */
   setProjectInfo(projectInfo) {
     this.projectDetails.projectName = projectInfo.projectName;
     this.projectDetails.startDate = projectInfo.startDate;
@@ -289,20 +287,29 @@ export class ProjectComponent implements OnInit {
     this.setStartEndDate = true;
   }
 
+/**
+ * This method should call when click reset button to reset the form values
+ */
   resetForm() {
-    this.priortyEnableBtn = true;
     this.managerDisabledBtn = true;
     if (this.buttonValue === 'Update') {
       this.buttonValue = 'Add';
     }
   }
 
+/**
+ * This method should call when shorting buttons based on sort value
+ * @param project : sort value
+ */
   sortProject(project: string) {
     this.path = project.split('.');
     this.sortOrder = this.sortOrder * (-1);
     return false;
   }
 
+/**
+ * This method should call to get the task informations to check the No of Tasks and Completed task informations to assign it corresponding project
+ */
   getTask() {
     this.spinner = true;
     this.service.getTask().subscribe(
@@ -310,35 +317,33 @@ export class ProjectComponent implements OnInit {
         if(res.success && res.success !== false) {
           this.spinner = false;
           this.taskData = res.data;
-          // this.taskInfo = this.taskData;
-          // res.data.filter(item => {
-          //   if (!item.parentTask) {
-          //     this.taskData.push(item);
-          //   }
-          // })
-          console.log('this.parentTaskInfo: ', this.taskData);
-          // this.parentNgBootstrapTypeahead(this.parentTaskInfo)
-          // console.log('Task info: ', this.taskInfo);
         } else {
           this.spinner = false;
           this.errorMessage = 'Failed: ' + res.message;
         }
       }, (error) => {
         this.spinner = false;
-        console.log('Error..!');
         this.errorMessage = 'We are having some technical error, please try after sometime to get the existing task informations...!!!';
       }
     )
   }
 
+/**
+ * This method should call when click delete button in delete modal box
+ * @param project : delete project informations
+ */
   deleteProject(project) {
     this.spinner = true;
     let deleteProjectList: any = [];
-    this.taskData.filter(item => {
-      if (project._id === item.project) {
-        deleteProjectList.push(item.project);
-      }
-    });
+    if (this.taskData.length > 1) {
+      this.taskData.filter(item => {
+        if (project._id === item.project) {
+          deleteProjectList.push(item.project);
+        }
+      });
+    } else {
+      deleteProjectList.push(project);
+    }
     this.service.deleteProject(deleteProjectList).subscribe(
       (res: any) => {
         if (res.success && res.success !== false) {

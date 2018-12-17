@@ -20,7 +20,7 @@ export class CommonService {
     return this.http.post('http://localhost:3030/api/user/updateUser/', user);
   }
 
-  // Get User
+  // Delete User
   deleteUser(user) {
     return this.http.post('http://localhost:3030/api/user/deleteUser/', user);
   }
@@ -60,7 +60,7 @@ export class CommonService {
     return this.http.post('http://localhost:3030/api/task/updateTask/', task);
   }
 
-  // Get Task
+  // Delete Task
   deleteTask(task) {
     return this.http.post('http://localhost:3030/api/task/deleteTask/', task);
   }

@@ -52,6 +52,5 @@ import { FindNoOfTaskPipe } from './pipe/findNoOfTasks.pipe';
   ],
   providers: [ CommonService, NgbActiveModal, DateFormatPipe, NgbDateFRParserFormatter, SharedService, FindTaskByIdPipe, FindNoOfTaskPipe ],
   bootstrap: [ AppComponent ],
-  // entryComponents: [ ModalComponent ]
 })
 export class AppModule { }

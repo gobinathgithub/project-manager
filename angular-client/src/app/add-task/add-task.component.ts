@@ -85,7 +85,7 @@ export class AddTaskComponent implements OnInit {
     this.taskDetails.task = (this.taskValues && this.taskValues.task) ? this.taskValues.task : '';
     this.priorty = (this.taskValues && this.taskValues.priorty) ? this.taskValues.priorty : 0;
     this.taskDetails.parentTask = (this.taskValues && this.taskValues.parentTask) ? this.taskValues.parentTask : false;
-    this.parentTaskBtnDisabled = (this.taskValues  && this.taskValues.project && this.taskValues.task && this.taskValues.priorty && this.taskValues.user) ? true : false;
+    this.parentTaskBtnDisabled = (this.taskValues  && this.taskValues.project && this.taskValues.task && this.taskValues.user) ? true : false;
     this.searchProjectBtnDisabled = (this.taskValues && this.taskValues.project) ? true : false;
   }
 

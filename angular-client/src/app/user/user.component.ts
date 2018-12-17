@@ -26,10 +26,18 @@ export class UserComponent implements OnInit {
     this.shared.TaskModel = new TaskDetailsModel();
   }
 
+/**
+ * When component initialze required informations/methods should call
+ */
   ngOnInit() {
     this.getUser();
   }
 
+/**
+ * This method should call when add/edit user and store/update the user informations to DB
+ * @param user : user information from form
+ * @param userForm : user form details
+ */
   addUser(user, userForm) {
     this.spinner = true;
     userForm.reset();
@@ -65,6 +73,9 @@ export class UserComponent implements OnInit {
     }    
   }
 
+/**
+ * This method should call to get the existing user informations to append in view
+ */
   getUser() {
     this.spinner = true;
     this.service.getUser().subscribe(
@@ -83,27 +94,42 @@ export class UserComponent implements OnInit {
     )
   }
 
+/**
+ * This method should when click Edit user button
+ * @param user : user information
+ */
   editUser(user) {
     this.editId = user._id;
     this.valButton = 'Update';
     this.setUserInfo(user);
   }
 
+/**
+ * This method should call to assign the user informations to exit in view
+ * @param userInfo : user informations to edit
+ */
   setUserInfo(userInfo) {
     this.userDetails.firstName = userInfo.firstName;
     this.userDetails.lastName = userInfo.lastName;
     this.userDetails.employeeId = userInfo.employeeId;
   }
 
+/**
+ * This method should call to open the modal
+ * @param content : modal name to open
+ * @param user : user informations to edit
+ */
   open(content, user) {
     this.modalService.open(content);
     this.deleteUserInfo = user;
   }
 
+/**
+ * This method should call to delete the existing user
+ * @param user : user informations to delete
+ */
   deleteUser(user) {
     this.spinner = true;
-    console.log('user._id: ', user._id);
-    console.log('user: ', user);
     this.service.deleteUser(user).subscribe(
       (data) => {
         if (data) {
@@ -119,6 +145,10 @@ export class UserComponent implements OnInit {
     )
   }
 
+/**
+ * This method should to find the esiting user informations length
+ * @param data : User informations to check the length of existing users
+ */
   userCountCheck(data) {
     if (data.length > 0) {
       this.userAvailable = true;
@@ -127,10 +157,17 @@ export class UserComponent implements OnInit {
     }
   }
 
+/**
+ * This method should call to reset the the model values
+ */
   resetModel() {
     this.userDetails = new UserDetailsModel();
   }
 
+/**
+ * This method should call to sort the user informations based on the key name
+ * @param user : key name to sort the user information
+ */
   sortUser(user: string) {
     this.path = user.split('.');
     this.sortOrder = this.sortOrder * (-1);
