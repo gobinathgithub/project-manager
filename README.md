@@ -32,7 +32,7 @@
 	<li>npm install</li>
 	<li>node app.js - To start the application</li>
 </ul>
-<p>Hit <a href="http://localhost:3030/api/user/getUser" target="_parent">http://localhost:3030/api/user/getUser </a> this url in POSTMAN to view the list tasks in GET method</p>
+<p>Hit <a href="http://localhost:3030/api/user/getUser" target="_parent">http://localhost:3030/api/user/getUser </a> this url in POSTMAN to view the list users in GET method</p>
 
 <h3>Database – MongoDB</h3>
 <p><b><i>Set DB path to run MongoDB:</b></i> mongodb-4.0\bin>mongod –dbpath “...\project-manager\db”</p>
@@ -50,6 +50,11 @@
 <p>Server – Express: <a href="http://localhost:3030/api/user/getUser ">http://localhost:3030/api/user/getUser </a></p>
 <b>To check in curl comments</b>
 <p>docker exec –it <container_id> sh</p>
+<p><strong>Angular: </strong> curl <a href="http://localhost:4200/">http://localhost:4200/</a></p>
+<p><strong>Express - Get Task: </strong> curl <a href="http://localhost:3030/api/task/getTask">http://localhost:3030/api/task/getTask</a></p>
+<p><strong>Express - Get Task: </strong> curl <a href="http://localhost:3030/api/project/getProject">http://localhost:3030/api/project/getProject</a></p>
+<p><strong>Express - Get Task: </strong> curl <a href="http://localhost:3030/api/user/getUser">http://localhost:3030/api/user/getUser</a></p>
+
 
 <h3>Jenkins</h3>
 <ul>
