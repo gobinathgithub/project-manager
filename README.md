@@ -49,7 +49,7 @@
 <p>Client – Angular: <a href="http://localhost:4200/">http://localhost:4200/</a></p>
 <p>Server – Express: <a href="http://localhost:3030/api/user/getUser ">http://localhost:3030/api/user/getUser </a></p>
 <b>To check in curl comments</b>
-<p>docker exec –it <container_id> sh</p>
+<p>docker exec –it <i>container_id</i> sh</p>
 <p><strong>Angular: </strong> curl <a href="http://localhost:4200/">http://localhost:4200/</a></p>
 <p><strong>Express - Get Task: </strong> curl <a href="http://localhost:3030/api/task/getTask">http://localhost:3030/api/task/getTask</a></p>
 <p><strong>Express - Get Project: </strong> curl <a href="http://localhost:3030/api/project/getProject">http://localhost:3030/api/project/getProject</a></p>
