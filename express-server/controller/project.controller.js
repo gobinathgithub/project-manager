@@ -15,7 +15,7 @@ module.exports = {
     updateProject: function (request, response) {
         var project = new Project(request.body);
         Project.findByIdAndUpdate(request.body._id, { projectName: project.projectName, startDate:project.startDate, endDate: project.endDate, 
-            priorty: project.priorty, manager: project.manager, status: project.status },
+            priorty: project.priorty, manager: project.manager },
             function (err) {
                 if (!!err) {
                     response.json({ success: false, message: err.message });

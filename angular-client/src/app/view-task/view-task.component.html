@@ -1,0 +1,102 @@
+<div class="my-4">
+  <div class="col-xl-8 col-lg-10 col-md-12 offset-xl-2 offset-lg-1">
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label">Project: </label>
+          <div class="col-sm-7">
+            <input type="text" class="form-control" required [(ngModel)]="projectSearchModal" name="project" #projectName="ngModel" [disabled]="true">
+          </div>
+          <div class="col-sm-3">
+            <button type="button" name="searchProject" class="btn btn-primary" (click)="open(projectSearch)" [disabled]="projectSearchBtnDisable">Search</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <label class="col-form-label">Sort:</label>&nbsp;
+        <button type="button" class="btn btn-outline-primary" (click)="sortTask('startDate')">Start Date</button>&nbsp;
+        <button type="button" class="btn btn-outline-primary" (click)="sortTask('endDate')">End Date</button>&nbsp;
+        <button type="button" class="btn btn-outline-primary" (click)="sortTask('priorty')">Priorty</button>&nbsp;
+        <button type="button" class="btn btn-outline-primary" (click)="sortTask('status')">Completed</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="task-table">
+        <table>
+          <tr *ngFor="let taskList of taskData | sortBy : path : sortOrder">
+            <td>
+              <div class="task-heading">Task</div>
+              <div class="task-information">
+
+                <div>{{taskList.task}}</div>
+              </div>
+            </td>
+            <td>
+              <div class="task-heading">Parent</div>
+              <div class="task-information">
+                <div>{{taskList.parent | findTaskById:taskData}}</div>
+              </div>
+            </td>
+            <td>
+              <div class="task-heading">Priorty</div>
+              <div class="task-information">{{taskList.priorty}}</div>
+            </td>
+            <td>
+              <div class="task-heading">Start</div>
+              <div class="task-information">{{taskList.startDate | date: 'yyyy-MM-dd'}}</div>
+            </td>
+            <td>
+              <div class="task-heading">End</div>
+              <div class="task-information">{{taskList.endDate | date: 'yyyy-MM-dd'}}</div>
+            </td>
+            <td>
+              <div class="task-heading"></div>
+              <div class="task-information">
+                <button type="button" id="edit-task" ([ngModel])="edit" [disabled]="taskList.status" (click)="editTask(taskList)" class="btn btn-primary">Edit</button>
+              </div>
+            </td>
+            <td>
+              <div class="task-heading"></div>
+              <div class="task-information">
+                <button type="button" id="end-task" ([ngModel])="endTask" [disabled]="taskList.status" (click)="endTask(taskList)" class="btn btn-secondary">End Task</button>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="spinner-wrapper" *ngIf="spinner">
+  <app-spinner></app-spinner>
+</div>
+
+<ng-template #projectSearch let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Please select Project</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group row">
+      <label class="col-sm-3 col-form-label">Project: </label>
+      <div class="col-sm-9">
+        <ng-template #rt let-r="result.projectName" let-t="term">
+          <ngb-highlight [result]="r" [term]="t"></ngb-highlight>
+        </ng-template>
+        <input id="project" type="text" class="form-control" 
+          [(ngModel)]="selectedProject" [ngbTypeahead]="searchProject" [resultTemplate]="rt" [inputFormatter]="formatterProject" />
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-sm-9 offset-3">
+        <input type="button" value="Select" (click)="selectProject(); c('Save click')" class="btn btn-primary" />
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="c('Cross click')">Cancel</button>
+  </div>
+</ng-template>

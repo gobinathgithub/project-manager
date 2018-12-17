@@ -1,0 +1,93 @@
+<div class="container">
+  <div class="row margin-top-10">
+    <div class="col-xl-8 col-lg-10 col-md-12 offset-xl-2 offset-lg-1 mt-4">
+      <form #userForm="ngForm" novalidate>
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label">First Name: </label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" required [(ngModel)]="userDetails.firstName" name="firstName" #firstName="ngModel">
+              <div *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)">
+                <div *ngIf="firstName.errors?.required" class="alert alert-danger">First Name is required field</div>
+              </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label">Last Name: </label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" required [(ngModel)]="userDetails.lastName" name="lastName" #lastName="ngModel">
+              <div *ngIf="userForm.invalid && (lastName.dirty || lastName.touched)">
+                <div *ngIf="lastName.errors?.required" class="alert alert-danger">Last Name is required field</div>
+              </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label">Employee ID: </label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" required pattern="[0-9 ]*" [(ngModel)]="userDetails.employeeId" name="employeeId" #employeeId="ngModel">
+              <div *ngIf="userForm.invalid && (employeeId.dirty || employeeId.touched)">
+                <div *ngIf="employeeId.errors?.required" class="alert alert-danger">Employee ID is a required field</div>
+                <div *ngIf="employeeId.errors?.pattern" class="alert alert-danger">Employee ID should be numerics values..!</div>
+              </div>
+            </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-sm-3"></div>
+          <div class="col-sm-9">
+            <input type="button" class="btn btn-primary" name="addUser" (click)="addUser(userForm.value, userForm)" [disabled]="userForm.invalid" id="add-user" value="{{valButton}}" /> &nbsp;&nbsp;
+            <input type="reset" class="btn btn-secondary" name="resetUser" value="Reset" (click)="userForm.resetForm({})" />
+          </div>
+        </div>
+        <div class="form-group row" *ngIf="errorMessage">
+          <div class="col-sm-12">
+            <div class="alert alert-danger">{{errorMessage}}</div>
+          </div>
+        </div>
+      </form>
+
+      <div *ngIf="userAvailable">
+        <div class="form-group row border-top pt-3 pt-sm-3">
+          <div class="col-sm-6">
+            <input type="text" class="form-control" placeholder="Search..." name="serachUser" [(ngModel)]="serachUser" />
+          </div>
+          <div class="col-sm-6 mt-3 mt-sm-0">
+            <label class="col-form-label">Sort:</label>&nbsp;
+            <button type="button" class="btn btn-outline-primary" (click)="sortUser('firstName')">First Name</button>&nbsp;
+            <button type="button" class="btn btn-outline-primary" (click)="sortUser('lastName')">Last Name</button>&nbsp;
+            <button type="button" class="btn btn-outline-primary" (click)="sortUser('employeeId')">ID</button>
+          </div>
+        </div>
+        <div *ngFor="let user of userInforamtion | filter : serachUser : 'user' | sortBy : path : sortOrder" class="form-group row pt-3 border-top">
+          <div class="col-sm-10">
+            <div class="py-1">{{user.firstName}}</div>
+            <div class="py-1">{{user.lastName}}</div>
+            <div class="py-1">{{user.employeeId}}</div>
+          </div>
+          <div class="col-sm-2">
+            <button type="button" class="btn btn-primary btn-block" (click)="editUser(user)">Edit</button>
+            <button type="button" class="btn btn-secondary btn-block" (click)="open(content, user)">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="spinner-wrapper" *ngIf="spinner">
+  <app-spinner></app-spinner>
+</div>
+
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Delete?</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>Are you sure want's to delete <b>{{deleteUserInfo.firstName}}, {{deleteUserInfo.lastName}}</b>?</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="c('Save click'); deleteUser(deleteUserInfo)">Yes</button>
+    <button type="button" class="btn btn-secondary" (click)="c('Cross click')">No</button>
+  </div>
+</ng-template>
