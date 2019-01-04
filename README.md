@@ -29,6 +29,7 @@
 <p>Express JS for exposing REST endpoints with MongoDB.</p>
 <b>Start Application</b>
 <ul>
+	<li>Change the MongoDB connect path from "database" to "localhost:27017" to setup in local environment</li>
 	<li>npm install</li>
 	<li>node app.js - To start the application</li>
 </ul>
